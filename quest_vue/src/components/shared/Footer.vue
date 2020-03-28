@@ -1,15 +1,15 @@
 <template>
- <h1>Footer</h1>
+<router-link to="/highscores">
+    <h1>Footer</h1>
+</router-link>
+
 </template>
 
 <script lang="ts">
-//import { Component, Prop, Vue } from 'vue-property-decorator';
+
 
 export default {
-    name: 'Footer',
-    
-    
-
+    name: 'Footer'
 }
 </script>
 

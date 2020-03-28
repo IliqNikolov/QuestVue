@@ -6,7 +6,7 @@
     </div>
     <Header/>
     <router-view/>
-    <Footer @click.native="test">
+    <Footer>
     </Footer>
   </div>
 </template>
@@ -23,14 +23,7 @@ export default {
     Footer,
     Header
   },
-  methods:
-  {
-    test()
-    {
-      console.log("t");
-      this.$router.push("/about");
-    }
-  }
+  
 }
 </script>
 
