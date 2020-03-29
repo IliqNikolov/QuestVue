@@ -4,8 +4,10 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <Header/>
-    <router-view/>
+    <Header :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
+    </Header>
+    <router-view :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
+    </router-view>
     <Footer>
     </Footer>
   </div>
@@ -23,7 +25,22 @@ export default {
     Footer,
     Header
   },
-  
+  methods:{
+    updateNavBar: function(){
+        this.usernameAndLogout.username=localStorage.user; 
+    },
+    logout:function(){
+        document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+        localStorage.user="";
+        this.usernameAndLogout.username=localStorage.user;
+        this.$router.push("/login")
+    }
+  },
+  data:function (){
+      return{         
+         usernameAndLogout:{username:localStorage.user,logout:this.logout}
+      }
+  } 
 }
 </script>
 

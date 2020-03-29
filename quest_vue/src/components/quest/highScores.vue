@@ -17,8 +17,7 @@
 </div>
 </template>
 
-<script lang="ts">
-import { IScoreList } from '../../Interfaces/score-list';
+<script>
 import questServices from '../../services/questServices';
 
 

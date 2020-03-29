@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import HighScores from '../components/quest/highScores.vue'
+import Login from '../components/user/login.vue'
+import Register from '../components/user/register.vue'
+import ChangePassword from '../components/user/changePassword.vue'
 
 Vue.use(VueRouter)
 
@@ -14,6 +17,18 @@ const routes = [
   {
     path: '/highscores',
     component:HighScores
+  },
+  {
+    path: '/login',
+    component:Login
+  },
+  {
+    path: '/register',
+    component:Register
+  },
+  {
+    path: '/changepassword',
+    component:ChangePassword
   },
   {
     path: '/about',

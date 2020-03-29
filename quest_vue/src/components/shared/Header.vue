@@ -3,14 +3,14 @@
  <router-link to="/">
      <img src="@/assets/Untitled-1 - Copy.png">
  </router-link>
- <template  v-if="this.username">
-     <span>Hello {{username}}</span>
+ <template  v-if="this.usernameAndLogout.username">
+     <span>Hello {{usernameAndLogout.username}}</span>
      <router-link to="/changepassword">
         <button>
             Change Password
         </button>
      </router-link>
-     <button @click="logout">Logout</button>
+     <button @click="usernameAndLogout.logout">Logout</button>
  </template>
  <template  v-else>
      <router-link to="/login">
@@ -32,18 +32,9 @@
 
 export default {
     name: 'Header',
-    data: function () {
-        return {
-            username:localStorage.user
-        }
-    },
-methods:{
-    logout:function(){
-        console.log("logged");
-    }
-}
-    
-
+    props:{
+        usernameAndLogout:{}
+    }    
 }
 </script>
 
