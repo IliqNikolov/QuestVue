@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import HighScores from '../components/quest/highScores.vue'
+import Create from '../components/quest/create.vue'
 import Login from '../components/user/login.vue'
 import Register from '../components/user/register.vue'
 import ChangePassword from '../components/user/changePassword.vue'
@@ -29,6 +30,10 @@ const routes = [
   {
     path: '/changepassword',
     component:ChangePassword
+  },
+  {
+    path: '/create',
+    component:Create
   },
   {
     path: '/about',
