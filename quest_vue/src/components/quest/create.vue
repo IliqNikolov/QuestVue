@@ -38,7 +38,7 @@
         <label>Stage Code</label>
         <input v-model="stages[i].code" type="text" @blur="stage.code.$touch()">
         <div v-if="stage.code.$error">Code is required</div>
-        <button type="button" @click="deleteStage(i)">Delete Stage</button>
+        <button :disabled="stages.length===1" type="button" @click="deleteStage(i)">Delete Stage</button>
       </div>
     <button type="button" @click="addStage">Add Stage</button>
     </div>
@@ -104,7 +104,7 @@ export default {
         questServices.Create(this.questName,this.code,this.cheats,this.mapInfo.position.lat,
         this.mapInfo.position.lng,this.showMap,this.date,this.time,this.stages).then(()=>{
           this.$router.push("/")
-        }).catch(e=>this.usernameAndLogout.logout());
+        }).catch(()=>this.usernameAndLogout.logout());
       }
     },
     components:{Map},

@@ -54,5 +54,47 @@ export default {
             withCredentials: true
           });
           return http.get(`${url}/${id}`)
+    },
+
+    Start(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.post(`${url}/Start`,{code:code})
+    },
+
+    End(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.post(`${url}/End`,{code:code})
+    },
+
+    Delete(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.post(`${url}/Delete`,{code:code})
+    },
+
+    EnterCode(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.post(`${url}/Code`,code)
+    },
+
+    Cheat(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.post(`${url}/Cheat`,{code:code})
+    },
+
+    Leave(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.post(`${url}/Leave`,{code:code})
     }
 }

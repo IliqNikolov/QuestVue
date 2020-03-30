@@ -15,13 +15,12 @@
       <i>― J.R.R. Tolkien, The Hobbit</i>
     </div>
     <div v-else>
-      <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout"></list>
+      <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list>
       <div v-if="Object.keys(quest).length === 0">
         Please slect Quest
       </div>
-      <Info v-else :quest="quest" :mapInfo="mapInfo"></Info>
+      <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="info"></Info>
     </div>
-    {{quest}}
   </div>
 </template>
 
@@ -37,7 +36,7 @@ export default {
     return{
       isLogged:false,
       quest:{},
-      mapInfo:{}
+      invalidQuestCode:false   
     }
   },
   mounted:function(){
@@ -50,26 +49,59 @@ export default {
   },
   components:{List,Info},
   methods:{
-    changeQuest:function(e){
-      questServices.GetQuestInfo(e).then(res=>{
-        this.mapInfo={     
-             position:{ lat:res.data.MapLat, lng:res.data.MapLon},
-             center:{ lat:res.data.MapLat, lng:res.data.MapLon},
-             isMarkerLocked:true
-          }
-        this.quest=res.data
-        }).catch(()=>{
+    changeQuest:function(id){
+      questServices.GetQuestInfo(id).then(res=>this.quest=res.data).catch(()=>{
         this.usernameAndLogout.logout();
       })   
     },
-    changeQuestToThis:function(e){
-      this.mapInfo={     
-             position:{ lat:e.MapLat, lng:e.MapLon},
-             center:{ lat:e.MapLat, lng:e.MapLon},
-             isMarkerLocked:true
-          }
-      this.quest=e;
-    }
+    changeQuestToThis:function(quest){
+      this.quest=quest;
+    },
+    start:function(){
+      questServices.Start(this.quest.Id).then(()=>{
+        this.quest.Status="Started";
+      }).catch(()=>this.usernameAndLogout.logout());
+    },
+    end:function(){
+      questServices.End(this.quest.Id).then(()=>{
+        this.quest.Status="Finished";
+      }).catch(()=>this.usernameAndLogout.logout());
+    },
+    cheat:function(){
+      questServices.Cheat(this.quest.Id).then(res=>{
+        this.quest=res.data;
+        this.$refs.info.clearForm();
+      }).catch(()=>this.usernameAndLogout.logout());     
+    },
+    deleteQuest:function(){
+      questServices.Delete(this.quest.Id).then(()=>{
+        this.$refs.list.reftesh();
+        this.quest={}}
+        )
+      .catch(()=>this.usernameAndLogout.logout());
+    },
+    leave:function(){
+      questServices.Leave(this.quest.Id).then(()=>{
+        this.$refs.list.reftesh();
+        this.quest={}}
+        )
+      .catch(()=>this.usernameAndLogout.logout());
+    },
+    enter:function(code){
+      questServices.EnterCode({QuestId:this.quest.Id,Code:code}).then(res=>{
+        this.$refs.info.clearForm();
+        this.quest=res.data;
+        this.invalidQuestCode=false;
+      }).catch(e=>{
+        if (e.response.data=="Invalid Code") {
+            this.invalidQuestCode=true;
+        }
+        else{
+          this.usernameAndLogout.logout();
+        }
+      }
+      )
+    },
   }
 }
 </script>

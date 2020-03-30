@@ -51,10 +51,13 @@ export default {
         clickedQuest:function(id){
             this.$emit("changeQuest",id)          
         },
-        joinQuest:function(){
-            questServices.Join(this.code).then(res=>{
+        reftesh:function(){
                 questServices.GetQuestList().then(res=>this.questList=res.data
                 ).catch(()=>this.usernameAndLogout.logout());
+        },
+        joinQuest:function(){
+            questServices.Join(this.code).then(res=>{
+                this.reftesh();
                 this.$emit("changeQuestToThis",res.data);
             }
             ).catch(e=>{

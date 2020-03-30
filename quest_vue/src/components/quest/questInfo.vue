@@ -16,12 +16,18 @@
             <input v-model="code" type="text" @blur="$v.code.$touch()">
             <div v-if="$v.code.$error">Entry Code is required</div>
             <div v-if="invalidQuestCode">Invalid Quest Code</div>
-            <button :disabled="$v.$invalid">Enter</button>
+            <button @click="sendQuest" :disabled="$v.$invalid">Enter</button>
         </font>
     </div>
     <div v-if="quest.Cheats>0 && quest.Status=='Started' && !quest.IsOwner">
-        <button @click="cheat">cheat</button>
+        <button @click="cheat">Cheat</button>
     </div>  
+    <div>
+        Number of players : {{quest.PlayerCount}}
+    </div>
+    <div v-if="quest.Cheats>=0">
+        Cheats : {{quest.Cheats}}
+    </div>
     <div v-if="!quest.IsOwner">
         <button @click="leave">Leave</button>
     </div> 
@@ -36,7 +42,6 @@
             {{stage.Name}} - {{stage.Description}}
         </div>
     </template> 
-    {{mapInfo}}
 </div>
 </template>
 
@@ -47,12 +52,19 @@ import Map from "../quest/map"
 export default {
     name:"Info",
     mixins:[validationMixin],
-    props:["quest","mapInfo"],
+    props:["quest","invalidQuestCode"],
     components:{Map},
     data:function(){
         return{
-            code:"",
-            invalidQuestCode:false
+            code:""       
+        }
+    },
+    computed:{
+        mapInfo:function(){return {     
+             position:{ lat:this.quest.MapLat, lng:this.quest.MapLon},
+             center:{ lat:this.quest.MapLat, lng:this.quest.MapLon},
+             isMarkerLocked:true
+        }
         }
     },
     validations:{
@@ -60,20 +72,26 @@ export default {
     },
      methods:{
         start:function(){
-            console.log("start");                       
+            this.$emit("start")                       
         },  
         end:function(){
-            console.log("end");                       
+            this.$emit("end");                       
         },    
         deleteQuest:function(){
-            console.log("delete");                       
+            this.$emit("delete");                       
         },  
         cheat:function(){
-            console.log("cheat");                       
+            this.$emit("cheat");                       
         },
         leave:function(){
-            console.log("leave");                       
-        },     
+            this.$emit("leave");                       
+        },  
+        sendQuest:function(){
+            this.$emit("enter",this.code);           
+        },
+        clearForm:function(){
+            this.code="";
+        }   
     }   
 }
 </script>

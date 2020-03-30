@@ -13,7 +13,6 @@
     
   />
 </GmapMap>
-{{mapInfo}}
 </div>
 </template>
 <script>
