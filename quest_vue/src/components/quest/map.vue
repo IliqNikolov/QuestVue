@@ -1,4 +1,5 @@
 <template>
+<div>
     <GmapMap
   :center="mapInfo.center"
   :zoom="10"
@@ -12,6 +13,8 @@
     
   />
 </GmapMap>
+{{mapInfo}}
+</div>
 </template>
 <script>
 export default {

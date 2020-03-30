@@ -33,6 +33,26 @@ export default {
                 withCredentials: true
               });
             return http.post(`${url}/Create`,quest)
-        }
-    
+        },
+
+    GetQuestList(){
+        const http = axios.create({
+            withCredentials: true
+          });
+        return http.get(`${url}/List`)
+    },
+
+    Join(code: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+        return http.post(`${url}/Join`,{code:code})
+    },
+
+    GetQuestInfo(id: string){
+        const http = axios.create({
+            withCredentials: true
+          });
+          return http.get(`${url}/${id}`)
+    }
 }

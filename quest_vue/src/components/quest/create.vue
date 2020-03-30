@@ -42,14 +42,14 @@
       </div>
     <button type="button" @click="addStage">Add Stage</button>
     </div>
-    <button>Create</button>
+    <button :disabled="$v.$invalid">Create</button>
 </form>
 </template>
 <script>
 import Map from "../quest/map"
 import { validationMixin } from "vuelidate";
 import { required, minLength, minValue } from "vuelidate/lib/validators";
-import questServices from "../../services/questServices"
+import questServices from "../../services/questServices";
 export default {
     name:"Create",
     mixins:[validationMixin],

@@ -12,7 +12,6 @@
     </div>
     <div v-if="isInvalidUsernameOrPassword">Invalid username or password</div>
     <button :disabled="$v.$invalid">Login</button>
-    {{username}}|{{password}}
 </form>
 </template>
 <script>
