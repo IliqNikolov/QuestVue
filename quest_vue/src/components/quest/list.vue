@@ -58,6 +58,9 @@ export default {
         joinQuest:function(){
             questServices.Join(this.code).then(res=>{
                 this.reftesh();
+                this.code="";
+                this.$v.$reset();
+                this.toggleJoinQuest();
                 this.$emit("changeQuestToThis",res.data);
             }
             ).catch(e=>{
@@ -78,7 +81,7 @@ export default {
                 this.showQuestEntryForm=true;
                 this.joinButtonText="Hide";
             }
-        }
+        }      
     },
      validations:{
         code: {required}

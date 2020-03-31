@@ -91,6 +91,7 @@ export default {
         },
         clearForm:function(){
             this.code="";
+            this.$v.$reset();
         }   
     }   
 }
