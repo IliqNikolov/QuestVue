@@ -1,7 +1,4 @@
-# Quest_Vue
-
-Quest is a small app focused on creating/organising outdoor quests. It supports basic user authentication, creation and management of quests.
-
+# quest_vue
 
 ## Project setup
 ```
