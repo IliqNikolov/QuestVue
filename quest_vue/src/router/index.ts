@@ -8,6 +8,39 @@ import Register from '../components/user/register.vue'
 import ChangePassword from '../components/user/changePassword.vue'
 
 Vue.use(VueRouter)
+function loginGuard(to: any, from: any, next: any)
+{
+ let isAuthenticated= false;
+if(localStorage.getItem('user'))
+  isAuthenticated = true;
+ else
+  isAuthenticated= false;
+ if(isAuthenticated) 
+ {
+  next();
+ } 
+ else
+ {
+  next('/login');
+ }
+}
+
+function logoutGuard(to: any, from: any, next: any)
+{
+ let isAuthenticated= false;
+if(!localStorage.getItem('user'))
+  isAuthenticated = true;
+ else
+  isAuthenticated= false;
+ if(isAuthenticated) 
+ {
+  next();
+ } 
+ else
+ {
+  next('/');
+ }
+}
 
 const routes = [
   {
@@ -21,19 +54,23 @@ const routes = [
   },
   {
     path: '/login',
-    component:Login
+    component:Login,
+    beforeEnter :logoutGuard
   },
   {
     path: '/register',
-    component:Register
+    component:Register,
+    beforeEnter :logoutGuard
   },
   {
     path: '/changepassword',
-    component:ChangePassword
+    component:ChangePassword,
+    beforeEnter :loginGuard
   },
   {
     path: '/create',
-    component:Create
+    component:Create,
+    beforeEnter :loginGuard
   }
 ]
 

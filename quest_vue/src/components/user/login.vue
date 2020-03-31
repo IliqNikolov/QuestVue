@@ -1,18 +1,12 @@
 <template>
-<form @submit.prevent="login">
-    <div>
-        <label>Username</label>
-        <input v-model="username" type="text" @blur="$v.username.$touch()">
-        <div v-if="$v.username.$error">Username must be at least 6 characters long</div>
-    </div>
-    <div>
-        <label>Password</label>
-        <input v-model="password" type="password" @blur="$v.password.$touch()">
-        <div v-if="$v.password.$error">Password must be at least 6 characters long</div>
-    </div>
+<v-form ref="form">
+        <v-text-field v-model="username" type="text" 
+        label="Username" :rules="usrnameRules"></v-text-field>
+        <v-text-field v-model="password" type="password"
+        label="Password" :rules="passwordRules"></v-text-field>
     <div v-if="isInvalidUsernameOrPassword">Invalid username or password</div>
-    <button :disabled="$v.$invalid">Login</button>
-</form>
+    <v-btn small @click="login">Login</v-btn>
+</v-form>
 </template>
 <script>
 import { validationMixin } from 'vuelidate'
@@ -26,24 +20,34 @@ export default {
         return{
             username:"",
             password:"",
+            usrnameRules:[
+                v => !!v || 'Username is required',
+                v => (v && v.length >= 6) || "Username can't be  less than 6 characters",
+            ],
+            passwordRules:[
+                v => !!v || 'Password is required',
+                v => (v && v.length >= 6) || "Password can't be  less than 6 characters",
+            ],
             isInvalidUsernameOrPassword:false
         }
     },
     methods:{
         login: function(){
-            userServices.Login(this.username,this.password).then(res=> {
-                this.isInvalidUsernameOrPassword=false;
-                document.cookie="user="+res.data.token;
-                localStorage.user=this.username;
-                this.$emit("updateNavBar");
-                this.$router.push("/")
-            }
-            ).catch(e=>{
-                if (e.response.status==401) {
-                    this.isInvalidUsernameOrPassword=true;
+            if (this.$refs.form.validate()) {
+                userServices.Login(this.username,this.password).then(res=> {
+                    this.isInvalidUsernameOrPassword=false;
+                    document.cookie="user="+res.data.token;
+                    localStorage.user=this.username;
+                    this.$emit("updateNavBar");
+                    this.$router.push("/")
                 }
+                ).catch(e=>{
+                    if (e.response.status==401) {
+                        this.isInvalidUsernameOrPassword=true;
+                    }
+                }
+                )               
             }
-            )
             
         }
     },
