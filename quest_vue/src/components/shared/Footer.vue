@@ -1,6 +1,6 @@
 <template>
 <router-link to="/highscores">
-    <h1>Footer</h1>
+    <h1>High Scores</h1>
 </router-link>
 
 </template>

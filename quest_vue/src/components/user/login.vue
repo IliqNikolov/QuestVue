@@ -5,17 +5,14 @@
         <v-text-field v-model="password" type="password"
         label="Password" :rules="passwordRules"></v-text-field>
     <div v-if="isInvalidUsernameOrPassword">Invalid username or password</div>
-    <v-btn small @click="login">Login</v-btn>
+    <v-btn small color="primary" @click="login">Login</v-btn>
 </v-form>
 </template>
 <script>
-import { validationMixin } from 'vuelidate'
-import { required, minLength } from 'vuelidate/lib/validators'
 import userServices from '../../services/userServices'
 
 export default {
     name:"Login",
-    mixins:[validationMixin],
     data: function(){
         return{
             username:"",
@@ -50,10 +47,6 @@ export default {
             }
             
         }
-    },
-    validations:{
-        username: {required,minLength: minLength(6) },
-        password: {required,minLength: minLength(6) }
-    }
+    },   
 }
 </script>

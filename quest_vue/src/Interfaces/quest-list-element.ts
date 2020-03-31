@@ -1,5 +1,5 @@
 export interface IQuestListElement {
-    Id : string;
-    Name : string;
-    Status : string;
+    Id: string;
+    Name: string;
+    Status: string;
 }

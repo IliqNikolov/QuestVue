@@ -1,8 +1,11 @@
 <template>
-<v-card color="grey lighten-4" flat height="200px" tile>
+<v-card color="grey lighten-4" flat height="50px" tile>
     <v-toolbar dense>
             <router-link to="/">
                 <img src="@/assets/Untitled-1 - Copy.png">
+            </router-link>
+            <router-link to="/">
+                <v-toolbar-title class="hidden-xs-only">Kings Quest</v-toolbar-title>
             </router-link>
         <v-spacer></v-spacer>
         <template  v-if="this.usernameAndLogout.username">

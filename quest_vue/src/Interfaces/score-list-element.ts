@@ -1,4 +1,4 @@
 export interface IScoreListElement {
-    Name : string;
-    Score : number;
+    Name: string;
+    Score: number;
 }

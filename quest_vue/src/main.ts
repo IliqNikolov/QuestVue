@@ -4,6 +4,8 @@ import router from './router'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import 'roboto-fontface/css/roboto/roboto-fontface.css'
+import vuetify from './plugins/vuetify';
 
 Vue.use(Vuetify)
 Vue.use(VueGoogleMaps, {
@@ -16,5 +18,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

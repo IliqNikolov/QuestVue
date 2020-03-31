@@ -1,5 +1,5 @@
 export interface IGetQuestStage {
-    Name : string;
+    Name: string;
     Description? : string;
 }
 

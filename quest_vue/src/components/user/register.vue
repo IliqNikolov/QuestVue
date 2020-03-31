@@ -1,64 +1,60 @@
 <template>
-<form @submit.prevent="register">
-    <div>
-        <label>Username</label>
-        <input v-model="username" type="text" @blur="$v.username.$touch()">
-        <div v-if="$v.username.$error">Username must be at least 6 characters long</div>
-    </div>
-    <div>
-        <label>Password</label>
-        <input v-model="password" type="password" @blur="$v.password.$touch()">
-        <div v-if="$v.password.$error">Password must be at least 6 characters long</div>
-    </div>
-    <div>
-        <label>Repeat Password</label>
-        <input v-model="rePassword" type="password" @blur="$v.rePassword.$touch()">
-        <div v-if="$v.rePassword.$error">Password and Repeat Password are different</div>
-    </div>
+<v-form ref="form">
+    <v-text-field v-model="username" type="text" 
+        label="Username" :rules="usrnameRules"></v-text-field>
+    <v-text-field v-model="password" type="password"
+        label="Password" :rules="passwordRules"></v-text-field>
+    <v-text-field v-model="rePassword" type="password"
+        label="Repeat Password" :rules="rePasswordRules"></v-text-field>
     <div v-if="isUsernameTaken">Username Taken</div>
-    <button :disabled="$v.$invalid">Register</button>
-    {{username}}|{{password}}|{{rePassword}}
-</form>
+    <v-btn small color="primary" @click="register">Register</v-btn>
+</v-form>
 </template>
 <script>
-import { validationMixin } from 'vuelidate'
-import { required, minLength, sameAs} from 'vuelidate/lib/validators'
 import userServices from '../../services/userServices'
 
 export default {
     name:"Register",
-    mixins:[validationMixin],
     data: function(){
         return{
             username:"",
             password:"",
             rePassword:"",
+            usrnameRules:[
+                v => !!v || 'Username is required',
+                v => (v && v.length >= 6) || "Username can't be  less than 6 characters",
+            ],
+            passwordRules:[
+                v => !!v || 'Password is required',
+                v => (v && v.length >= 6) || "Password can't be  less than 6 characters",
+            ],
+            rePasswordRules:[
+                v => !!v || 'Password is required',
+                v => (v && v.length >= 6) || "Password can't be  less than 6 characters",
+                v => v==this.password || "Passwords don't match"               
+            ],
             isUsernameTaken:false
         }
     },
     methods:{
         register: function(){
-            userServices.Register(this.username,this.password).then(res=> {
-                this.isUsernameTaken=false;
-                document.cookie="user="+res.data.token;
-                localStorage.user=this.username;
-                this.$emit("updateNavBar");
-                this.$router.push("/")
-            }
-            ).catch(e=>{
-                if (e.response.status==400) {
-                    this.isUsernameTaken=true;
+            if (this.$refs.form.validate()) {
+                userServices.Register(this.username,this.password).then(res=> {
+                    this.isUsernameTaken=false;
+                    document.cookie="user="+res.data.token;
+                    localStorage.user=this.username;
+                    this.$emit("updateNavBar");
+                    this.$router.push("/")
                 }
+                ).catch(e=>{
+                    if (e.response.status==400) {
+                        this.isUsernameTaken=true;
+                    }
+                }
+                )                
             }
-            )
             
         }
-    },
-    validations:{
-        username: {required,minLength: minLength(6) },
-        password: {required,minLength: minLength(6) },
-        rePassword: {sameAsPassword: sameAs("password") }
-
-    }
+    },   
 }
 </script>
