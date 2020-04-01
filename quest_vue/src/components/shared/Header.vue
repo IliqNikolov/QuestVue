@@ -15,7 +15,7 @@
                     Change Password
                 </v-btn>
             </router-link>
-            <v-btn text small @click="usernameAndLogout.logout" class="hidden-sm-and-down">Logout</v-btn>
+            <v-btn text small @click="usernameAndLogout.logout">Logout</v-btn>
         </template>
         <template  v-else>
             <router-link to="/login">

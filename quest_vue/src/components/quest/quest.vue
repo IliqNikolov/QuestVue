@@ -1,11 +1,40 @@
 <template>
-    <div>
+<div>   
+    <v-container class="hidden-sm-and-down">
+      <v-layout row>
+          <v-flex sm3 col>
+            <div>
+              <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list>
+            </div>
+          </v-flex>
+          <v-flex xs12 sm9 col>
+            <h1 v-if="Object.keys(quest).length === 0">
+                Please slect Quest
+            </h1>
+            <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="info"></Info>
+          </v-flex>
+      </v-layout>
+    </v-container>
+    <div class="hidden-md-and-up">
+      <v-btn
+              fab
+              color="cyan accent-2"
+              bottom
+              left
+              absolute
+              @click="nav=true"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+      <v-navigation-drawer app v-model="nav">
         <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list>
+      </v-navigation-drawer>
         <h1 v-if="Object.keys(quest).length === 0">
             Please slect Quest
         </h1>
         <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="info"></Info>
     </div>
+</div>
 </template>
 
 <script>
@@ -19,7 +48,8 @@ export default {
   data:function(){
     return{
       quest:{},
-      invalidQuestCode:false   
+      invalidQuestCode:false,
+      nav:true   
     }
   },
   components:{List,Info},

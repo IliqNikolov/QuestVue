@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <button @click="toggleJoinQuest">{{joinButtonText}}</button>
+            <v-btn @click="toggleJoinQuest">{{joinButtonText}}</v-btn>
             <router-link to="/create" tag="button">Create Quest</router-link>
         </div>
         <font v-if="showQuestEntryForm" @submit.prevent="joinQuest">

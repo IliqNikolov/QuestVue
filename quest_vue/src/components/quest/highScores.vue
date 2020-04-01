@@ -36,7 +36,6 @@ export default  {
         getData: function () {
             questServices.Score().then(res =>{              
                 this.resData=res.data
-                console.log(this.resData);
         })
         }
     }
