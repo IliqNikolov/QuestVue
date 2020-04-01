@@ -16,23 +16,19 @@
       </v-layout>
     </v-container>
     <div class="hidden-md-and-up">
-      <v-btn
-              fab
-              color="cyan accent-2"
-              bottom
-              left
-              absolute
-              @click="nav=true"
-            >
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-      <v-navigation-drawer app v-model="nav">
-        <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list>
-      </v-navigation-drawer>
-        <h1 v-if="Object.keys(quest).length === 0">
-            Please slect Quest
-        </h1>
-        <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="info"></Info>
+      <v-tabs v-model="tab">
+        <v-tab>Quests</v-tab>
+        <v-tab :disabled="isQuestSelected">Selected quest</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab">
+        <v-tab-item><list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list></v-tab-item>
+        <v-tab-item>
+          <h1 v-if="Object.keys(quest).length === 0">
+                Please slect Quest
+            </h1>
+            <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="info"></Info>
+          </v-tab-item>      
+      </v-tabs-items>      
     </div>
 </div>
 </template>
@@ -49,10 +45,28 @@ export default {
     return{
       quest:{},
       invalidQuestCode:false,
-      nav:true   
+      tab:{} 
     }
   },
   components:{List,Info},
+  computed:{
+    isQuestSelected:function(){
+      if(Object.keys(this.quest).length === 0){
+      return true;
+      }
+      return false;
+    }
+  },
+  watch: {
+    quest:function(newQuest,oldQuest){    
+      if (Object.keys(newQuest).length === 0) {
+        this.tab=0
+      }
+      else if (Object.keys(newQuest).length >= 0) {
+        this.tab=1
+      }
+    }
+  },
   methods:{
     changeQuest:function(id){
       questServices.GetQuestInfo(id).then(res=>this.quest=res.data).catch(()=>{
@@ -106,7 +120,7 @@ export default {
         }
       }
       )
-    },
+    }
   }
 }
 </script>
