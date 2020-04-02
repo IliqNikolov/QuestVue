@@ -1,65 +1,66 @@
 <template>
-<form @submit.prevent="changePassword">
-    <div>
-        <label>Old Password</label>
-        <input v-model="oldPassword" type="password" @blur="$v.oldPassword.$touch()">
-        <div v-if="$v.oldPassword.$error">Password must be at least 6 characters long</div>
-    </div>
-    <div>
-        <label>New Password</label>
-        <input v-model="newPassword" type="password" @blur="$v.newPassword.$touch()">
-        <div v-if="$v.newPassword.$error">New Password must be at least 6 characters long</div>
-    </div>
-    <div>
-        <label>Repeat New Password</label>
-        <input v-model="reNewPassword" type="password" @blur="$v.reNewPassword.$touch()">
-        <div v-if="$v.reNewPassword.$error">New Password and Repeat New Password are different</div>
-    </div>
-    <div v-if="isPasswordCorrect">Invalid password</div>
-    <button :disabled="$v.$invalid">Change Password</button>
-    {{oldPassword}}|{{newPassword}}|{{reNewPassword}}
-</form>
+<v-container class="fill-height">
+        <v-layout row justify-center>
+            <v-flex xs12 sm6>
+                <v-form ref="form">
+                    <v-text-field v-model="oldPassword" type="password"
+                         label="Old Password" :rules="oldPasswordRules"></v-text-field>
+                        <v-text-field v-model="newPassword" type="password"
+                         label="New Password" :rules="newPasswordRules"></v-text-field>
+                        <v-text-field v-model="reNewPassword" type="password"
+                         label="Repeat New Password" :rules="reNewPasswordRules"></v-text-field>
+                    <div class="error--text" v-if="isPasswordCorrect">Invalid password</div>
+                    <v-btn @click="changePassword">Change Password</v-btn>
+                </v-form>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 <script>
-import { validationMixin } from 'vuelidate'
-import { required, minLength, sameAs} from 'vuelidate/lib/validators'
 import userServices from '../../services/userServices'
 
 export default {
     name:"ChangePassword",
-    mixins:[validationMixin],
     props:{usernameAndLogout:{}},
     data: function(){
         return{
             oldPassword:"",
             newPassword:"",
             reNewPassword:"",
-            isPasswordCorrect:false
+            isPasswordCorrect:false,
+            oldPasswordRules:[
+                v => !!v || 'Password is required',
+                v => (v && v.length >= 6) || "Password can't be  less than 6 characters",
+            ],
+            newPasswordRules:[
+                v => !!v || 'Repeat New Password is required',
+                v => (v && v.length >= 6) || "New Password can't be  less than 6 characters",
+            ],
+            reNewPasswordRules:[
+                v => !!v || 'Repeat New Password is required',
+                v => (v && v.length >= 6) || "Repeat New Password can't be  less than 6 characters",
+                v => v==this.newPassword || "New Passwords don't match"               
+            ],
         }
     },
     methods:{
         changePassword: function(){
-            userServices.ChangePassword(this.newPassword,this.oldPassword).then(res=> {
-                this.isPasswordCorrect=false;
-                this.$router.push("/")
-            }
-            ).catch(e=>{
-                if (e.response.status==400) {
-                    this.isPasswordCorrect=true;
+            if (this.$refs.form.validate()) {
+                userServices.ChangePassword(this.newPassword,this.oldPassword).then(res=> {
+                    this.isPasswordCorrect=false;
+                    this.$router.push("/")
                 }
-                if (e.response.status==401) {
-                    this.usernameAndLogout.logout();
+                ).catch(e=>{
+                    if (e.response.status==400) {
+                        this.isPasswordCorrect=true;
+                    }
+                    if (e.response.status==401) {
+                        this.usernameAndLogout.logout();
+                    }
                 }
+                )
             }
-            )
-            
         }
-    },
-    validations:{
-        oldPassword: {required,minLength: minLength(6) },
-        newPassword: {required,minLength: minLength(6) },
-        reNewPassword: {sameAsPassword: sameAs("newPassword") }
-
     }
 }
 </script>

@@ -1,47 +1,58 @@
 <template>
 <div>
-    <div>
+    <div class="d-flex align-center flex-column">
         <h1>{{quest.QuestName}} ({{quest.Status}})</h1>
         <h3 v-if="0>quest.Cheats">Completed</h3>
         <div v-if="quest.IsOwner">
-        <button v-if="quest.Status=='Not Started'" @click="start">Start</button>
-        <button v-if="quest.Status=='Started'" @click="end">End</button>
-        <button @click="deleteQuest">Delete</button>
-        <div>Code : {{quest.Code}}</div>
+            <v-row>
+                <v-col>
+                    <v-btn v-if="quest.Status=='Not Started'" @click="start">Start</v-btn>
+                    <v-btn v-if="quest.Status=='Started'" @click="end">End</v-btn>
+                </v-col>
+                <v-col><v-btn @click="deleteQuest">Delete</v-btn></v-col>
+            </v-row>
         </div>
     </div>
-    <div v-if="!quest.IsOwner && quest.Cheats>=0 && quest.Status=='Started'">
-        <font @submit.prevent="sendQuest">
-            <label>Code</label>
-            <input v-model="code" type="text" @blur="$v.code.$touch()">
-            <div v-if="$v.code.$error">Entry Code is required</div>
-            <div v-if="invalidQuestCode">Invalid Quest Code</div>
-            <button @click="sendQuest" :disabled="$v.$invalid">Enter</button>
-        </font>
+    <div v-if="quest.IsOwner" class="d-flex align-center flex-column">
+            <div>Code : {{quest.Code}}</div>
     </div>
-    <div v-if="quest.Cheats>0 && quest.Status=='Started' && !quest.IsOwner">
-        <button @click="cheat">Cheat</button>
-    </div>  
-    <div>
+    <div class="d-flex align-center flex-column" v-if="!quest.IsOwner && quest.Cheats>=0 && quest.Status=='Started'">
+        <v-form ref="form" >
+            <v-layout row>
+                <v-layout col><div class="my-text-box"><v-text-field width="300" v-model="code" 
+                  type="text" label="Code" :rules="codeRules"></v-text-field></div></v-layout>
+                <v-layout col><v-btn @click="sendQuest">Enter</v-btn></v-layout>
+            </v-layout>
+            <div class="error--text" v-if="invalidQuestCode">Invalid Quest Code</div>
+        </v-form>
+    </div>
+    <div class="d-flex align-center flex-column">
+        <template v-if="quest.Cheats>=0">
+            Cheats : {{quest.Cheats}}
+        </template>
         Number of players : {{quest.PlayerCount}}
     </div>
-    <div v-if="quest.Cheats>=0">
-        Cheats : {{quest.Cheats}}
+    <div class="d-flex justify-space-around flex-row">
+        <v-btn v-if="quest.Cheats>0 && quest.Status=='Started' && !quest.IsOwner" @click="cheat">Cheat</v-btn> 
+        <v-btn v-if="!quest.IsOwner" @click="leave">Leave</v-btn>
     </div>
-    <div v-if="!quest.IsOwner">
-        <button @click="leave">Leave</button>
-    </div> 
     <Map :mapInfo="mapInfo" v-if="quest.MapLat && quest.MapLon"></Map>
-    <div>
-        <input v-if="quest.Date" type="date" :disabled="true" :value="quest.Date">
-        <input v-if="quest.Time" type="time" :disabled="true" :value="quest.Time">
-    </div>  
+    <v-layout row>
+        <v-layout col><v-flex ><input v-if="quest.Date" type="date" :disabled="true" :value="quest.Date"></v-flex></v-layout>
+        <v-layout col><v-flex><input v-if="quest.Time" type="time" :disabled="true" :value="quest.Time"></v-flex></v-layout>
+    </v-layout>  
     <template v-if="quest.Status!='Not Started || quest.IsOwner'">
-        <div v-for="(stage,index) in quest.Stages" :key="index">
-        <hr>
-            {{stage.Name}} - {{stage.Description}}
-        </div>
-    </template> 
+        <v-stepper vertical>
+            <template v-for="(stage,index) in quest.Stages">
+                <v-stepper-step  :editable="!!stage.Description" :complete="!!stage.Description" :key="`${index}-step`" :step="index+1">
+                    {{stage.Name}}          
+                </v-stepper-step>
+                <v-stepper-content :key="index" :step="index+1">
+                    {{stage.Description}}
+                </v-stepper-content>
+            </template>
+        </v-stepper>
+    </template>
 </div>
 </template>
 
@@ -56,6 +67,9 @@ export default {
     components:{Map},
     data:function(){
         return{
+            codeRules:[
+            v => !!v || "Code Name is required"
+          ],
             code:""       
         }
     },
@@ -87,12 +101,19 @@ export default {
             this.$emit("leave");                       
         },  
         sendQuest:function(){
-            this.$emit("enter",this.code);           
+            if (this.$refs.form.validate()) {
+                this.$emit("enter",this.code);   
+            }        
         },
         clearForm:function(){
             this.code="";
             this.$v.$reset();
-        }   
+        }
     }   
 }
 </script>
+<style scoped>
+.my-text-box {
+    width: 300px !important;
+  }
+</style>

@@ -2,7 +2,7 @@
   <v-app>
     <Header :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
     </Header>
-    <router-view :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
+    <router-view class="bottom-padding" :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
     </router-view>
     <Footer>
     </Footer>
@@ -38,3 +38,8 @@ export default Vue.extend({
   } 
 });
 </script>
+<style scoped>
+.bottom-padding{
+  padding-bottom: 60px;
+}
+</style>

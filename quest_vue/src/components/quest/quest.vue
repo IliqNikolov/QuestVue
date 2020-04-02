@@ -2,12 +2,12 @@
 <div>   
     <v-container class="hidden-sm-and-down">
       <v-layout row>
-          <v-flex sm3 col>
+          <v-flex sm4 col>
             <div>
               <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list>
             </div>
           </v-flex>
-          <v-flex xs12 sm9 col>
+          <v-flex xs12 sm8 col>
             <h1 v-if="Object.keys(quest).length === 0">
                 Please slect Quest
             </h1>
@@ -16,7 +16,7 @@
       </v-layout>
     </v-container>
     <div class="hidden-md-and-up">
-      <v-tabs v-model="tab">
+      <v-tabs grow centered v-model="tab">
         <v-tab>Quests</v-tab>
         <v-tab :disabled="isQuestSelected">Selected quest</v-tab>
       </v-tabs>

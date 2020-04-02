@@ -9,8 +9,8 @@
                         label="Password" :rules="passwordRules"></v-text-field>
                     <v-text-field v-model="rePassword" type="password"
                         label="Repeat Password" :rules="rePasswordRules"></v-text-field>
-                    <div v-if="isUsernameTaken">Username Taken</div>
-                    <v-btn small color="primary" @click="register">Register</v-btn>
+                    <div class="error--text" v-if="isUsernameTaken">Username Taken</div>
+                    <v-btn @click="register">Register</v-btn>
                 </v-form>
             </v-flex>
         </v-layout>
