@@ -10,7 +10,7 @@
                         <v-text-field v-model="reNewPassword" type="password"
                          label="Repeat New Password" :rules="reNewPasswordRules"></v-text-field>
                     <div class="error--text" v-if="isPasswordCorrect">Invalid password</div>
-                    <v-btn @click="changePassword">Change Password</v-btn>
+                    <v-btn color="primary" @click="changePassword">Change Password</v-btn>
                 </v-form>
             </v-flex>
         </v-layout>

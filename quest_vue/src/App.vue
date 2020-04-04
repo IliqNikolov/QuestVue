@@ -2,6 +2,7 @@
   <v-app>
     <Header :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
     </Header>
+    <v-parallax src="@/assets/flat,750x,075,f-pad,750x1000,f8f8f8.jpg" height="200"></v-parallax>
     <router-view class="bottom-padding" :usernameAndLogout="usernameAndLogout" @updateNavBar="updateNavBar">
     </router-view>
     <Footer>
@@ -11,8 +12,8 @@
 
 <script>
 import Vue from 'vue';
-import Footer from './components/shared/Footer';
-import Header from './components/shared/Header';
+import Footer from './components/shared/footer';
+import Header from './components/shared/header';
 
 export default Vue.extend({
   name: 'App',

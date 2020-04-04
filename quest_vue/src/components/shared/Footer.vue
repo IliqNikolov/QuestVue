@@ -1,7 +1,7 @@
 <template>
     <router-link to="/highscores">
-        <v-footer absolute class="d-flex align-center flex-column">          
-            <h1>High Scores</h1>
+        <v-footer color="primary" absolute class="d-flex align-center flex-column">          
+            <h1 class="white--text">High Scores</h1>
         </v-footer>
     </router-link>
 </template>

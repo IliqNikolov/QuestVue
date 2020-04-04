@@ -8,7 +8,7 @@
                         <v-text-field v-model="password" type="password"
                         label="Password" :rules="passwordRules"></v-text-field>
                     <div class="error--text" v-if="isInvalidUsernameOrPassword">Invalid username or password</div>
-                    <v-btn @click="login">Login</v-btn>
+                    <v-btn color="primary" @click="login">Login</v-btn>
                 </v-form>
             </v-flex>
         </v-layout>

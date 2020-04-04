@@ -8,7 +8,12 @@ export default {
     Score(){
         return axios.get(`${url}/Score`);
     },
-
+    
+    GetHTTP(){
+        return axios.create({
+            withCredentials: true
+          });
+    },
     Create(questName: string,
         code: string,
         cheats: number,
@@ -29,72 +34,41 @@ export default {
             quest.date=date;
             quest.time=time;
             quest.stages=stages;
-            const http = axios.create({
-                withCredentials: true
-              });
-            return http.post(`${url}/Create`,quest)
+            return this.GetHTTP().post(`${url}/Create`,quest)
         },
-
-    GetQuestList(){
-        const http = axios.create({
-            withCredentials: true
-          });
-        return http.get(`${url}/List`)
+    GetQuestList(){    
+        return this.GetHTTP().get(`${url}/List`)
     },
 
-    Join(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-        return http.post(`${url}/Join`,{code:code})
+    Join(code: string){      
+        return this.GetHTTP().post(`${url}/Join`,{code:code})
     },
 
-    GetQuestInfo(id: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.get(`${url}/${id}`)
+    GetQuestInfo(id: string){       
+          return this.GetHTTP().get(`${url}/${id}`)
     },
 
     Start(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.post(`${url}/Start`,{code:code})
+          return this.GetHTTP().post(`${url}/Start`,{code:code})
     },
 
     End(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.post(`${url}/End`,{code:code})
+          return this.GetHTTP().post(`${url}/End`,{code:code})
     },
 
     Delete(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.post(`${url}/Delete`,{code:code})
+          return this.GetHTTP().post(`${url}/Delete`,{code:code})
     },
 
     EnterCode(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.post(`${url}/Code`,code)
+          return this.GetHTTP().post(`${url}/Code`,code)
     },
 
     Cheat(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.post(`${url}/Cheat`,{code:code})
+          return this.GetHTTP().post(`${url}/Cheat`,{code:code})
     },
 
     Leave(code: string){
-        const http = axios.create({
-            withCredentials: true
-          });
-          return http.post(`${url}/Leave`,{code:code})
+          return this.GetHTTP().post(`${url}/Leave`,{code:code})
     }
 }

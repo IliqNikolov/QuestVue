@@ -6,10 +6,10 @@
         <div v-if="quest.IsOwner">
             <v-row>
                 <v-col>
-                    <v-btn v-if="quest.Status=='Not Started'" @click="start">Start</v-btn>
-                    <v-btn v-if="quest.Status=='Started'" @click="end">End</v-btn>
+                    <v-btn color="primary" v-if="quest.Status=='Not Started'" @click="start">Start</v-btn>
+                    <v-btn color="primary" v-if="quest.Status=='Started'" @click="end">End</v-btn>
                 </v-col>
-                <v-col><v-btn @click="deleteQuest">Delete</v-btn></v-col>
+                <v-col><v-btn color="warning" @click="deleteQuest">Delete</v-btn></v-col>
             </v-row>
         </div>
     </div>
@@ -21,7 +21,7 @@
             <v-layout row>
                 <v-layout col><div class="my-text-box"><v-text-field width="300" v-model="code" 
                   type="text" label="Code" :rules="codeRules"></v-text-field></div></v-layout>
-                <v-layout col><v-btn @click="sendQuest">Enter</v-btn></v-layout>
+                <v-layout col><v-btn color="primary" @click="sendQuest">Enter</v-btn></v-layout>
             </v-layout>
             <div class="error--text" v-if="invalidQuestCode">Invalid Quest Code</div>
         </v-form>
@@ -33,8 +33,8 @@
         Number of players : {{quest.PlayerCount}}
     </div>
     <div class="d-flex justify-space-around flex-row">
-        <v-btn v-if="quest.Cheats>0 && quest.Status=='Started' && !quest.IsOwner" @click="cheat">Cheat</v-btn> 
-        <v-btn v-if="!quest.IsOwner" @click="leave">Leave</v-btn>
+        <v-btn color="primary" v-if="quest.Cheats>0 && quest.Status=='Started' && !quest.IsOwner" @click="cheat">Cheat</v-btn> 
+        <v-btn color="warning" v-if="!quest.IsOwner" @click="leave">Leave</v-btn>
     </div>
     <Map :mapInfo="mapInfo" v-if="quest.MapLat && quest.MapLon"></Map>
     <v-layout row>
@@ -57,12 +57,9 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
 import Map from "../quest/map"
 export default {
     name:"Info",
-    mixins:[validationMixin],
     props:["quest","invalidQuestCode"],
     components:{Map},
     data:function(){
@@ -80,9 +77,6 @@ export default {
              isMarkerLocked:true
         }
         }
-    },
-    validations:{
-        code: {required}
     },
      methods:{
         start:function(){
@@ -107,7 +101,7 @@ export default {
         },
         clearForm:function(){
             this.code="";
-            this.$v.$reset();
+            this.$refs.form.resetValidation();
         }
     }   
 }

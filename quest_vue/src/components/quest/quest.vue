@@ -4,7 +4,7 @@
       <v-layout row>
           <v-flex sm4 col>
             <div>
-              <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list>
+              <list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" :questList="questList"></list>
             </div>
           </v-flex>
           <v-flex xs12 sm8 col>
@@ -21,12 +21,12 @@
         <v-tab :disabled="isQuestSelected">Selected quest</v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab">
-        <v-tab-item><list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" ref="list"></list></v-tab-item>
+        <v-tab-item><list @changeQuest="changeQuest" @changeQuestToThis="changeQuestToThis" :usernameAndLogout="usernameAndLogout" :questList="questList"></list></v-tab-item>
         <v-tab-item>
           <h1 v-if="Object.keys(quest).length === 0">
                 Please slect Quest
             </h1>
-            <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="info"></Info>
+            <Info v-else :invalidQuestCode="invalidQuestCode" :quest="quest" @start="start" @end="end" @cheat="cheat" @delete="deleteQuest" @leave="leave" @enter="enter" ref="infoM"></Info>
           </v-tab-item>      
       </v-tabs-items>      
     </div>
@@ -45,7 +45,8 @@ export default {
     return{
       quest:{},
       invalidQuestCode:false,
-      tab:{} 
+      tab:{} ,
+      questList:{}
     }
   },
   components:{List,Info},
@@ -56,6 +57,10 @@ export default {
       }
       return false;
     }
+  },
+  mounted:function(){
+        questServices.GetQuestList().then(res=>this.questList=res.data
+            ).catch(()=>this.usernameAndLogout.logout());
   },
   watch: {
     quest:function(newQuest,oldQuest){    
@@ -69,48 +74,54 @@ export default {
   },
   methods:{
     changeQuest:function(id){
-      questServices.GetQuestInfo(id).then(res=>this.quest=res.data).catch(()=>{
+      questServices.GetQuestInfo(id).then(res=>{
+        this.quest=res.data
+        this.reftesh();
+        this.invalidQuestCode=false;
+        }).catch(()=>{
         this.usernameAndLogout.logout();
       })   
     },
     changeQuestToThis:function(quest){
+      this.reftesh();
       this.quest=quest;
+      this.invalidQuestCode=false;
     },
     start:function(){
       questServices.Start(this.quest.Id).then(()=>{
         this.quest.Status="Started";
+        this.reftesh();
       }).catch(()=>this.usernameAndLogout.logout());
     },
     end:function(){
       questServices.End(this.quest.Id).then(()=>{
         this.quest.Status="Finished";
+        this.reftesh();
       }).catch(()=>this.usernameAndLogout.logout());
     },
     cheat:function(){
       questServices.Cheat(this.quest.Id).then(res=>{
-        this.quest=res.data;
-        this.$refs.info.clearForm();
+        this.ressetCode();
       }).catch(()=>this.usernameAndLogout.logout());     
     },
     deleteQuest:function(){
       questServices.Delete(this.quest.Id).then(()=>{
-        this.$refs.list.reftesh();
+        this.reftesh();
         this.quest={}}
         )
       .catch(()=>this.usernameAndLogout.logout());
     },
     leave:function(){
       questServices.Leave(this.quest.Id).then(()=>{
-        this.$refs.list.reftesh();
+        this.reftesh();
         this.quest={}}
         )
       .catch(()=>this.usernameAndLogout.logout());
     },
     enter:function(code){
-      questServices.EnterCode({QuestId:this.quest.Id,Code:code}).then(res=>{
-        this.$refs.info.clearForm();
+      questServices.EnterCode({QuestId:this.quest.Id,Code:code}).then(res=>{        
+        this.ressetCode();
         this.quest=res.data;
-        this.invalidQuestCode=false;
       }).catch(e=>{
         if (e.response.data=="Invalid Code") {
             this.invalidQuestCode=true;
@@ -120,6 +131,15 @@ export default {
         }
       }
       )
+    },
+    reftesh:function(){
+      questServices.GetQuestList().then(res=>this.questList=res.data
+      ).catch(()=>this.usernameAndLogout.logout());
+    },
+    ressetCode:function(){
+      this.$refs.info.clearForm();
+      this.$refs.infoM.clearForm();
+      this.invalidQuestCode=false;
     }
   }
 }

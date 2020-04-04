@@ -2,10 +2,10 @@
     <v-container class="d-flex align-center flex-column">
         <v-row>
             <v-col>
-                <v-btn @click="toggleJoinQuest">{{joinButtonText}}</v-btn>
+                <v-btn color="primary" @click="toggleJoinQuest">{{joinButtonText}}</v-btn>
             </v-col>
             <v-col>
-                <router-link to="/create" tag="v-btn">Create Quest</router-link>
+                <v-btn color="primary" to="/create">Create Quest</v-btn>
             </v-col>
         </v-row>
         <v-form  v-if="showQuestEntryForm" ref="form" >
@@ -14,7 +14,7 @@
              label="Code" :rules="codeRules"></v-text-field>    
             </div>
             <div class="error--text" v-if="invalidQuestCode">Invalid Quest Code</div>
-            <v-btn @click="joinQuest">Enter</v-btn>
+            <v-btn color="primary" @click="joinQuest">Enter</v-btn>
         </v-form>
         <v-list dense max-width="300">
             <v-divider></v-divider>
@@ -32,16 +32,12 @@
 </template>
 <script>
 import questServices from "../../services/questServices"
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
 
 export default {
     name:"List",
-    mixins:[validationMixin],
-    props:{usernameAndLogout:{}},  
+    props:{usernameAndLogout:{},questList:{}},  
     data:function(){
         return{
-            questList:{},
             showQuestEntryForm:false,
             code:"",
             invalidQuestCode:false,
@@ -50,26 +46,17 @@ export default {
           ],
             joinButtonText:"Join Quest"
         }
-    },
-    mounted:function(){
-        questServices.GetQuestList().then(res=>this.questList=res.data
-            ).catch(()=>this.usernameAndLogout.logout());
-    },
+    },   
     methods:{
         clickedQuest:function(id){
             this.$emit("changeQuest",id)          
-        },
-        reftesh:function(){
-                questServices.GetQuestList().then(res=>this.questList=res.data
-                ).catch(()=>this.usernameAndLogout.logout());
-        },
+        },        
         joinQuest:function(){
              if (this.$refs.form.validate()) {
             questServices.Join(this.code).then(res=>{
-                this.reftesh();
                 this.code="";
-                this.$v.$reset();
                 this.toggleJoinQuest();
+                this.invalidQuestCode=false;
                 this.$emit("changeQuestToThis",res.data);
             }
             ).catch(e=>{
@@ -92,10 +79,7 @@ export default {
                 this.joinButtonText="Hide";
             }
         }      
-    },
-     validations:{
-        code: {required}
-     }
+    }
 }
 </script>
 <style scoped>

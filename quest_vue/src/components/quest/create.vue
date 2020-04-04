@@ -10,7 +10,7 @@
         <v-text-field v-model="cheats" type="number" 
             label="Number of cheats" :rules="cheatRules"></v-text-field>
         <div class="text-center">
-          <v-btn big type="button" @click="toggleMap" >{{buttonText}}</v-btn>
+          <v-btn color="primary" big type="button" @click="toggleMap" >{{buttonText}}</v-btn>
           <Map v-if="showMap" :mapInfo="mapInfo">
           </Map>
         </div>
@@ -49,19 +49,19 @@
       </v-layout>
       <v-layout row>
       <v-layout col justify-center>
-        <v-btn :disabled="stages.length===1" type="button" @click="deleteStage(i)">Delete Stage</v-btn>
+        <v-btn color="warning" :disabled="stages.length===1" type="button" @click="deleteStage(i)">Delete Stage</v-btn>
       </v-layout>
       </v-layout>
     </div>
        <v-layout row xs12 sm9 >
       <v-layout col justify-end>
       <v-flex xs4 sm3>
-        <v-btn type="button" @click="addStage">Add Stage</v-btn>
+        <v-btn color="primary" type="button" @click="addStage">Add Stage</v-btn>
       </v-flex>
       </v-layout>
       <v-layout col justify-start>
       <v-flex xs4 sm3>
-        <v-btn @click="create">Create</v-btn>
+        <v-btn color="primary" @click="create">Create</v-btn>
       </v-flex>
       </v-layout>
     </v-layout>
