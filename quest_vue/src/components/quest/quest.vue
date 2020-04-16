@@ -101,6 +101,7 @@ export default {
     },
     cheat:function(){
       questServices.Cheat(this.quest.Id).then(res=>{
+        this.quest=res.data;
         this.ressetCode();
       }).catch(()=>this.usernameAndLogout.logout());     
     },
